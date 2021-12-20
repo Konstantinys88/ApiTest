@@ -5,10 +5,14 @@ import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
+import org.example.model.Order;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import java.io.IOException;
+import java.util.Random;
+
+import static io.restassured.RestAssured.given;
 
 public class StoreApiTest {
 
@@ -26,9 +30,51 @@ public class StoreApiTest {
     }
 
     @Test
-    public void orderForPet() {}
+    public void orderForPet() {
+        Order order = new Order();
+        int id = new Random().nextInt(500000);
+        order.setId(id);
+        order.setPetId(id);
+        order.setQuantity(id);
+        order.setShipDate("2021-20-12T20:40:00.000+0000");
+        order.setComplete(new Random().nextBoolean());
+
+        given()
+                .body(order)
+                .when()
+                .post("/store/order")
+                .then()
+                .statusCode(200);
+
+
+        Order actual =
+                given()
+                        .pathParam("orderId", id)
+                        .when()
+                        .get("/store/order/{orderId}")
+                        .then()
+                        .statusCode(200)
+                        .extract().body()
+                        .as(Order.class);
+        Assert.assertEquals(actual.getPetId(), order.getPetId());
+
+    }
 
     @Test
-    public void deleteOrderForPet() {}
+    public void deleteOrderForPet() {
+        Order order = new Order();
+        int id = new Random().nextInt(500000);
+        order.setId(id);
+        order.setPetId(id);
+        order.setQuantity(id);
+        order.setShipDate("2021-20-12T20:40:00.000+0000");
+        order.setComplete(new Random().nextBoolean());
 
+        given()
+                .pathParam("orderId", order.getId())
+                .when()
+                .delete("/store/order/{orderId}")
+                .then()
+                .statusCode(404);
+    }
 }
