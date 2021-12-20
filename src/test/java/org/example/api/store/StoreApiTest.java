@@ -30,7 +30,7 @@ public class StoreApiTest {
     }
 
     @Test
-    public void orderForPet() {
+    public void orderForPet() throws InterruptedException {
         Order order = new Order();
         int id = new Random().nextInt(500000);
         order.setId(id);
@@ -46,6 +46,7 @@ public class StoreApiTest {
                 .then()
                 .statusCode(200);
 
+        Thread.sleep(20000);
 
         Order actual =
                 given()
