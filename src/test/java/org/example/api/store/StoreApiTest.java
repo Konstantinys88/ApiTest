@@ -46,7 +46,6 @@ public class StoreApiTest {
                 .then()
                 .statusCode(200);
 
-        Thread.sleep(20000);
 
         Order actual =
                 given()
@@ -60,6 +59,7 @@ public class StoreApiTest {
         Assert.assertEquals(actual.getPetId(), order.getPetId());
 
     }
+
 
     @Test
     public void deleteOrderForPet() {
